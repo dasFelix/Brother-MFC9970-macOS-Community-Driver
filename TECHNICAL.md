@@ -56,7 +56,7 @@ A typical service discovered by macOS looks like:
 
 The actual Bonjour host name is device-specific and may look similar to:
 
-    BRN001122334455.local
+    BRNXXXXXXXXXXXX.local
 
 The installer discovers the printer dynamically. No fixed IP address or
 device-specific BRN hostname is included in the public package.

@@ -116,7 +116,7 @@ do
 
         #
         # Remove final DNS root dot:
-        # BRN001122334455.local. -> BRN001122334455.local
+        # BRNXXXXXXXXXXXX.local. -> BRNXXXXXXXXXXXX.local
         #
         HOST="${HOST%.}"
 
