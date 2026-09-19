@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+
+    <title>Brother MFC-9970CDW Community-Project Driver v__VERSION__</title>
+
+    <options
+        customize="never"
+        require-scripts="false"
+    />
+
+    <welcome
+        file="welcome.html"
+        mime-type="text/html"
+    />
+
+    <readme
+        file="readme.html"
+        mime-type="text/html"
+    />
+
+    <license
+        file="LICENSE.txt"
+        mime-type="text/plain"
+    />
+
+    <conclusion
+        file="conclusion.html"
+        mime-type="text/html"
+    />
+
+    <choices-outline>
+        <line choice="community-driver"/>
+    </choices-outline>
+
+    <choice
+        id="community-driver"
+        visible="false"
+        title="Brother MFC-9970CDW Community-Project Driver"
+    >
+        <pkg-ref id="org.communityproject.brother.mfc9970.communitydriver"/>
+    </choice>
+
+    <pkg-ref id="org.communityproject.brother.mfc9970.communitydriver">
+        Brother-MFC9970-Community-Driver-component.pkg
+    </pkg-ref>
+
+</installer-gui-script>

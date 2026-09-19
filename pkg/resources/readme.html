@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    margin: 18px;
+}
+h1 {
+    font-size: 19px;
+}
+h2 {
+    font-size: 15px;
+    margin-top: 20px;
+}
+code {
+    font-family: Menlo, monospace;
+    font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<h1>About this driver</h1>
+
+<p>
+<strong>Brother MFC-9970CDW Community-Project Driver v__VERSION__</strong>
+is an independent implementation for modern macOS.
+</p>
+
+<h2>Supported features</h2>
+
+<p>
+The current driver supports color and grayscale printing, 600 dpi,
+Brother Fine / 2400-dpi-class mode, long-edge duplex, short-edge duplex,
+automatic Bonjour discovery and direct supply-level reporting.
+</p>
+
+<p>
+Supply information includes Cyan, Magenta, Yellow and Black toner,
+as well as Drum, Belt and Fuser status.
+</p>
+
+<h2>How it works</h2>
+
+<p>
+Printing is sent directly from macOS to the MFC-9970CDW using the
+printer's PostScript interpreter over TCP port 9100.
+</p>
+
+<p>
+Supply levels are queried directly from the printer using SNMP.
+</p>
+
+<p>
+No Brother proprietary driver binaries are included with this package.
+</p>
+
+<h2>Automatic discovery</h2>
+
+<p>
+During installation the driver searches the local network for a
+Brother MFC-9970CDW advertised through Bonjour / DNS-SD.
+</p>
+
+<p>
+If exactly one compatible printer is found, the printer queue is
+configured automatically. The printer does not need a fixed IP address.
+</p>
+
+<p>
+If multiple MFC-9970CDW printers are discovered, installation currently
+stops rather than choosing a printer arbitrarily.
+</p>
+
+<h2>macOS “Driver Version 10.4”</h2>
+
+<p>
+macOS may display <strong>Driver Version 10.4</strong> in Printer
+Information. This refers to Apple's generic PostScript printing
+infrastructure and is not the version of this project.
+</p>
+
+<p>
+The Community-Project Driver version is <strong>__VERSION__</strong>.
+</p>
+
+<h2>Compatibility note</h2>
+
+<p>
+This driver currently uses the traditional PPD-based macOS/CUPS printer
+driver interface. That interface is deprecated and may eventually be
+removed from future versions of macOS or CUPS.
+</p>
+
+<h2>Testing and feedback</h2>
+
+<p>
+This is a public beta. Testing on different Macs, macOS versions,
+printer firmware versions and network configurations is very welcome.
+</p>
+
+<p>
+Please report successful tests as well as problems through the project's
+issue tracker. Useful reports include the macOS version, Apple Silicon
+or Intel architecture, printer connection type, application used for
+printing, and the feature being tested.
+</p>
+
+<p>
+Please avoid publishing private IP addresses, serial numbers, MAC
+addresses or other device-specific identifiers unless they are actually
+needed to diagnose a problem.
+</p>
+
+</body>
+</html>
