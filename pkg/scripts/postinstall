@@ -11,7 +11,7 @@ CONF="$BASE/printer.conf"
 SERVICE="_pdl-datastream._tcp"
 DOMAIN="local."
 
-echo "Brother MFC-9970CDW Community-Project Driver v0.7"
+echo "Brother MFC-9970CDW macOS Community Driver v0.8"
 echo "Searching for Brother MFC-9970CDW via Bonjour..."
 
 if [ ! -x /usr/bin/dns-sd ]; then
@@ -189,7 +189,7 @@ CONFIG
     -E \
     -v "socket://${HOST}:${PORT}" \
     -P "$PPD" \
-    -D "Brother MFC-9970CDW Community-Project Driver"
+    -D "Brother MFC-9970CDW macOS Community Driver"
 
 /usr/sbin/lpadmin \
     -p "$QUEUE" \

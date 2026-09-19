@@ -12,10 +12,10 @@ RESOURCES="$BUILD/resources"
 
 DEST="$ROOT/Library/Printers/CommunityProject/BrotherMFC9970"
 
-COMPONENT="$PKGDIR/Brother-MFC9970-Community-Driver-component.pkg"
+COMPONENT="$PKGDIR/Brother-MFC9970-macOS-Community-Driver-component.pkg"
 DISTRIBUTION="$BUILD/Distribution.xml"
 
-OUT="$SCRIPT_DIR/Brother-MFC9970-Community-Driver-${VERSION}.pkg"
+OUT="$SCRIPT_DIR/Brother-MFC9970-macOS-Community-Driver-${VERSION}.pkg"
 
 run_pkgbuild()
 {
@@ -42,7 +42,7 @@ render()
 }
 
 echo
-echo "Building Brother MFC-9970CDW Community-Project Driver v${VERSION}"
+echo "Building Brother MFC-9970CDW macOS Community Driver v${VERSION}"
 echo
 
 /bin/rm -rf "$BUILD"

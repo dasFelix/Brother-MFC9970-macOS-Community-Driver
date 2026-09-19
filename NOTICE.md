@@ -1,6 +1,6 @@
 # Notices
 
-Brother MFC-9970CDW Community-Project Driver
+Brother MFC-9970CDW macOS Community Driver
 
 This project contains a modified PPD derived from the CUPS generic
 PostScript printer definition.

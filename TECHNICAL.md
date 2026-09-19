@@ -1,7 +1,7 @@
 # Technical Notes
 
 This document describes the technical findings behind the
-Brother MFC-9970CDW Community-Project Driver.
+Brother MFC-9970CDW macOS Community Driver.
 
 The implementation was developed through behavioral reverse engineering,
 protocol observation, comparison of generated print streams, and testing

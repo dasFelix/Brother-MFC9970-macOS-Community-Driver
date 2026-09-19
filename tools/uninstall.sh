@@ -9,7 +9,7 @@ if [ "$(id -u)" -ne 0 ]; then
     exec sudo "$0" "$@"
 fi
 
-echo "Brother MFC-9970CDW Community-Project Driver"
+echo "Brother MFC-9970CDW macOS Community Driver"
 echo "Uninstaller"
 echo
 

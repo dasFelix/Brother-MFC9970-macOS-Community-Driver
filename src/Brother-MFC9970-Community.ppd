@@ -7,11 +7,11 @@
 *% Licensed under Apache License v2.0.  See the file "LICENSE" for more
 *% information.
 *%
-*% Modified in 2026 for the Brother MFC-9970CDW Community-Project Driver.
+*% Modified in 2026 for the Brother MFC-9970CDW macOS Community Driver.
 *% Changes include printer metadata, print options, supply reporting and CUPS filters.
 
 *%
-*% Modified in 2026 for the Brother MFC-9970CDW Community-Project Driver.
+*% Modified in 2026 for the Brother MFC-9970CDW macOS Community Driver.
 *% Changes include printer metadata, print options, supply reporting, and CUPS filter integration.
 
 *FormatVersion: "4.3"
@@ -21,9 +21,9 @@
 *PCFileName: "generic.ppd"
 *Product: "(MFC-9970CDW)"
 *Manufacturer: "Brother"
-*ModelName: "Brother MFC-9970CDW Community-Project Driver"
-*ShortNickName: "Brother MFC-9970CDW Community"
-*NickName: "Brother MFC-9970CDW Community-Project Driver v0.8"
+*ModelName: "Brother MFC-9970CDW macOS Community Driver"
+*ShortNickName: "Brother MFC-9970CDW macOS"
+*NickName: "Brother MFC-9970CDW macOS Community Driver v0.8"
 *PSVersion: "(2016.0) 0"
 *LanguageLevel: "2"
 *ColorDevice: True

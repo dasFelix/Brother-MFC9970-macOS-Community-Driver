@@ -1,4 +1,4 @@
-# Brother MFC-9970CDW Community-Project Driver for macOS
+# Brother MFC-9970CDW macOS Community Driver
 
 An unofficial community driver for the Brother MFC-9970CDW on modern macOS systems.
 
@@ -78,6 +78,31 @@ No printer IP address needs to be entered manually.
 
 The printer must be powered on and reachable on the same local network during installation.
 
+
+## macOS compatibility
+
+| macOS version | Status |
+|---|---|
+| macOS 27.x | ✅ Tested |
+| macOS 26.x | 🧪 Expected to work; community testing wanted |
+| macOS 15.x and older | ❓ Not currently tested |
+| Future macOS releases | ❓ Not guaranteed |
+
+The current driver uses the traditional PPD-based CUPS printer-driver
+architecture.
+
+macOS 27.x is the currently tested platform.
+
+macOS 26.x is expected to work with the same driver architecture, but
+additional community testing is wanted before it is listed as fully tested.
+
+Compatibility with future macOS releases cannot be guaranteed because the
+traditional PPD-based printer-driver architecture is deprecated and may
+eventually be removed from macOS/CUPS.
+
+If you can test the driver on another macOS version, please report both
+successful and unsuccessful results through GitHub Issues.
+
 ## Requirements
 
 - macOS with the built-in CUPS printing system
@@ -89,7 +114,7 @@ The printer must be powered on and reachable on the same local network during in
 
 Driver name:
 
-    Brother MFC-9970CDW Community-Project Driver
+    Brother MFC-9970CDW macOS Community Driver
 
 Project version:
 
