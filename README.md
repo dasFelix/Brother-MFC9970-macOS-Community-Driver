@@ -6,7 +6,7 @@ The project is intended to keep the MFC-9970CDW usable without the legacy Brothe
 
 ## Current version
 
-**0.7 Public Beta**
+**0.8 Public Beta**
 
 ## Features
 
