@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Brother MFC-9970CDW native macOS PostScript/PJL filter
+# Streaming version - no temporary files, no Rosetta.
+
+OPTS="$5"
+
+MODE="COLOR"
+QUALITY="NORMAL"
+
+# Color mode from CUPS/PPD job options.
+case " $OPTS " in
+    *" ColorModel=Gray "*)
+        MODE="GRAYSCALE"
+        ;;
+    *" ColorModel=Color "*)
+        MODE="COLOR"
+        ;;
+esac
+
+# Quality from CUPS/PPD job options.
+case " $OPTS " in
+    *" Resolution=600x2400dpi "*)
+        QUALITY="FINE"
+        ;;
+    *" Resolution=600dpi "*)
+        QUALITY="NORMAL"
+        ;;
+esac
+
+if [ "$QUALITY" = "FINE" ]; then
+    APTMODE="ON4"
+else
+    APTMODE="OFF"
+fi
+
+# Visible in CUPS error_log when debug logging is enabled.
+echo "INFO: Brother9970 nativefilter MODE=$MODE QUALITY=$QUALITY APTMODE=$APTMODE OPTIONS=$OPTS" >&2
+
+# Brother PJL header.
+printf '\033%%-12345X@PJL SET RENDERMODE=%s\r\n' "$MODE"
+printf '@PJL SET RESOLUTION=600\r\n'
+printf '@PJL SET APTMODE=%s\r\n' "$APTMODE"
+printf '@PJL ENTER LANGUAGE=POSTSCRIPT\r\n'
+
+# CUPS supplies the pstops output either as argv[6] or stdin.
+if [ "$#" -ge 6 ] && [ -r "$6" ]; then
+    /bin/cat "$6"
+else
+    /bin/cat
+fi
+
+# Universal Exit Language.
+printf '\033%%-12345X'
+
+exit 0

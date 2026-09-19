@@ -1,0 +1,103 @@
+#!/bin/sh
+
+CONF="/Library/Printers/CommunityProject/BrotherMFC9970/printer.conf"
+OID="1.3.6.1.4.1.2435.2.3.9.4.2.1.5.5.8.0"
+COMMUNITY="public"
+
+# Only react to the CUPS ReportLevels command.
+if [ "$#" -ge 6 ] && [ -r "$6" ]; then
+    COMMANDS=$(/bin/cat "$6")
+else
+    COMMANDS=$(/bin/cat)
+fi
+
+case "$COMMANDS" in
+    *ReportLevels*) ;;
+    *) exit 0 ;;
+esac
+
+[ -r "$CONF" ] || exit 0
+
+HOST=$(/usr/bin/sed -n 's/^PRINTER_HOST=//p' "$CONF" | /usr/bin/head -n 1)
+
+[ -n "$HOST" ] || exit 0
+
+RAW=$(/usr/bin/snmpget \
+    -v2c \
+    -c "$COMMUNITY" \
+    -Oqv \
+    -Ox \
+    "$HOST" \
+    "$OID" 2>/dev/null) || exit 0
+
+LEVELS=$(printf '%s\n' "$RAW" | /usr/bin/awk '
+function hex2dec(h,    i,c,n) {
+    h=toupper(h)
+    n=0
+
+    for (i=1; i<=length(h); i++) {
+        c=index("0123456789ABCDEF",substr(h,i,1))-1
+
+        if (c < 0)
+            return -1
+
+        n=(n*16)+c
+    }
+
+    return n
+}
+
+{
+    for (i=1; i<=NF; i++) {
+        if ($i ~ /^[0-9A-Fa-f][0-9A-Fa-f]$/)
+            b[++n]=$i
+    }
+}
+
+END {
+    K=C=M=Y=DRUM=BELT=FUSER=-1
+
+    for (i=1; i<=n-6; i++) {
+        id=toupper(b[i])
+
+        if (b[i+1] != "01" || b[i+2] != "04")
+            continue
+
+        if (id!="41" && id!="69" && id!="6A" &&
+            id!="6F" && id!="70" && id!="71" && id!="72")
+            continue
+
+        v = hex2dec(b[i+3])*16777216 \
+          + hex2dec(b[i+4])*65536 \
+          + hex2dec(b[i+5])*256 \
+          + hex2dec(b[i+6])
+
+        level=int((v/100)+0.5)
+
+        if (level < 0) level=0
+        if (level > 100) level=100
+
+        if (id=="41") DRUM=level
+        if (id=="69") BELT=level
+        if (id=="6A") FUSER=level
+        if (id=="6F") K=level
+        if (id=="70") C=level
+        if (id=="71") M=level
+        if (id=="72") Y=level
+    }
+
+    printf "%d,%d,%d,%d,%d,%d,%d\n",
+           C,M,Y,K,DRUM,BELT,FUSER
+}
+')
+
+[ -n "$LEVELS" ] || exit 0
+
+echo 'ATTR: marker-names=Cyan,Magenta,Yellow,Black,Drum,Belt,Fuser' >&2
+echo 'ATTR: marker-colors=#00FFFF,#FF00FF,#FFFF00,#000000,none,none,none' >&2
+echo 'ATTR: marker-types=toner,toner,toner,toner,opc,transfer-unit,fuser' >&2
+echo 'ATTR: marker-low-levels=5,5,5,5,5,5,5' >&2
+echo 'ATTR: marker-high-levels=100,100,100,100,100,100,100' >&2
+echo "ATTR: marker-levels=$LEVELS" >&2
+
+exit 0

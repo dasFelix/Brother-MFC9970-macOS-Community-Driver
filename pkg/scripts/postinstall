@@ -1,0 +1,211 @@
+#!/bin/bash
+
+set -e
+
+QUEUE="Brother_MFC_9970CDW_Community"
+
+BASE="/Library/Printers/CommunityProject/BrotherMFC9970"
+PPD="$BASE/Brother-MFC9970-Community.ppd"
+CONF="$BASE/printer.conf"
+
+SERVICE="_pdl-datastream._tcp"
+DOMAIN="local."
+
+echo "Brother MFC-9970CDW Community-Project Driver v0.7"
+echo "Searching for Brother MFC-9970CDW via Bonjour..."
+
+if [ ! -x /usr/bin/dns-sd ]; then
+    echo "ERROR: dns-sd is not available."
+    exit 1
+fi
+
+if [ ! -x /usr/bin/snmpget ]; then
+    echo "ERROR: snmpget is not available."
+    exit 1
+fi
+
+if [ ! -f "$PPD" ]; then
+    echo "ERROR: Driver PPD not found:"
+    echo "$PPD"
+    exit 1
+fi
+
+TMP=$(/usr/bin/mktemp -d /private/tmp/brother9970.XXXXXX)
+
+cleanup()
+{
+    /bin/rm -rf "$TMP"
+}
+
+trap cleanup EXIT
+
+BROWSE="$TMP/browse.txt"
+INSTANCES="$TMP/instances.txt"
+MATCHES="$TMP/matches.txt"
+UNIQUE="$TMP/unique.txt"
+
+: >"$MATCHES"
+
+#
+# Browse all raw printing services for a few seconds.
+#
+/usr/bin/dns-sd -B "$SERVICE" "$DOMAIN" >"$BROWSE" 2>&1 &
+BROWSE_PID=$!
+
+/bin/sleep 4
+
+/bin/kill "$BROWSE_PID" 2>/dev/null || true
+wait "$BROWSE_PID" 2>/dev/null || true
+
+#
+# Extract unique Bonjour instance names.
+#
+/usr/bin/awk '
+{
+    for (i=1; i<=NF; i++) {
+        if ($i == "_pdl-datastream._tcp.") {
+            if (i < NF) {
+                name=$(i+1)
+
+                for (j=i+2; j<=NF; j++)
+                    name=name " " $j
+
+                print name
+            }
+        }
+    }
+}
+' "$BROWSE" | /usr/bin/sort -u >"$INSTANCES"
+
+#
+# Inspect every discovered raw-print service.
+#
+while IFS= read -r INSTANCE
+do
+    [ -n "$INSTANCE" ] || continue
+
+    LOOKUP="$TMP/lookup.txt"
+    : >"$LOOKUP"
+
+    /usr/bin/dns-sd \
+        -L "$INSTANCE" "$SERVICE" "$DOMAIN" \
+        >"$LOOKUP" 2>&1 &
+
+    LOOKUP_PID=$!
+
+    /bin/sleep 2
+
+    /bin/kill "$LOOKUP_PID" 2>/dev/null || true
+    wait "$LOOKUP_PID" 2>/dev/null || true
+
+    #
+    # Identify the actual printer model from Bonjour TXT records.
+    # This also works when the user renamed the Bonjour instance.
+    #
+    if /usr/bin/grep -Eq \
+        'usb_MDL=MFC-9970CDW|ty=Brother\\ MFC-9970CDW|product=.*Brother\\ MFC-9970CDW' \
+        "$LOOKUP"
+    then
+        REACH=$(/usr/bin/grep 'can be reached at' "$LOOKUP" | /usr/bin/head -n 1)
+
+        HOST=$(printf '%s\n' "$REACH" | \
+            /usr/bin/sed -E 's/.*can be reached at ([^: ]+):([0-9]+).*/\1/')
+
+        PORT=$(printf '%s\n' "$REACH" | \
+            /usr/bin/sed -E 's/.*can be reached at ([^: ]+):([0-9]+).*/\2/')
+
+        #
+        # Remove final DNS root dot:
+        # BRN001122334455.local. -> BRN001122334455.local
+        #
+        HOST="${HOST%.}"
+
+        if [ -n "$HOST" ] && [ -n "$PORT" ]; then
+            printf '%s|%s|%s\n' \
+                "$INSTANCE" "$HOST" "$PORT" >>"$MATCHES"
+        fi
+    fi
+
+done <"$INSTANCES"
+
+#
+# De-duplicate devices discovered on multiple interfaces.
+#
+/usr/bin/awk -F'|' '!seen[$2]++' "$MATCHES" >"$UNIQUE"
+
+COUNT=$(/usr/bin/wc -l <"$UNIQUE" | /usr/bin/tr -d ' ')
+
+if [ "$COUNT" -eq 0 ]; then
+    echo "ERROR: No Brother MFC-9970CDW was found."
+    echo "Make sure the printer is powered on and connected to the same network."
+    exit 1
+fi
+
+if [ "$COUNT" -gt 1 ]; then
+    echo "ERROR: More than one Brother MFC-9970CDW was found."
+    echo "Automatic configuration is intentionally aborted to avoid choosing the wrong printer."
+    /bin/cat "$UNIQUE"
+    exit 1
+fi
+
+FOUND=$(/usr/bin/head -n 1 "$UNIQUE")
+
+INSTANCE=$(printf '%s\n' "$FOUND" | /usr/bin/cut -d'|' -f1)
+HOST=$(printf '%s\n' "$FOUND" | /usr/bin/cut -d'|' -f2)
+PORT=$(printf '%s\n' "$FOUND" | /usr/bin/cut -d'|' -f3)
+
+echo "Found printer:"
+echo "  Bonjour name: $INSTANCE"
+echo "  Host:         $HOST"
+echo "  Port:         $PORT"
+
+#
+# Store the discovered host for the ReportLevels command filter.
+#
+/bin/cat >"$CONF" <<CONFIG
+PRINTER_HOST=$HOST
+PRINTER_PORT=$PORT
+CONFIG
+
+/usr/sbin/chown root:wheel "$CONF"
+/bin/chmod 644 "$CONF"
+
+#
+# Validate the PPD now that all package payload files exist.
+#
+/usr/bin/cupstestppd "$PPD" >/dev/null
+
+#
+# Replace only our own queue.
+#
+/usr/sbin/lpadmin -x "$QUEUE" 2>/dev/null || true
+
+#
+# Use the Bonjour .local hostname directly.
+# No fixed IP address is stored.
+#
+/usr/sbin/lpadmin \
+    -p "$QUEUE" \
+    -E \
+    -v "socket://${HOST}:${PORT}" \
+    -P "$PPD" \
+    -D "Brother MFC-9970CDW Community-Project Driver"
+
+/usr/sbin/lpadmin \
+    -p "$QUEUE" \
+    -o PageSize=A4 \
+    -o Option1=True \
+    -o ColorModel=Color \
+    -o Resolution=600dpi \
+    -o printer-is-shared=false
+
+/usr/sbin/cupsenable "$QUEUE"
+/usr/sbin/cupsaccept "$QUEUE"
+
+echo
+echo "Installation completed successfully."
+echo "Queue: $QUEUE"
+echo "Device: socket://${HOST}:${PORT}"
+echo "Supplies host: $HOST"
+
+exit 0
