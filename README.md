@@ -118,14 +118,14 @@ Driver name:
 
 Project version:
 
-    0.7
+    0.8
 
 macOS may separately display a system driver version such as `10.4`.
 That number belongs to Apple's generic PostScript printing infrastructure and is not the version of this project.
 
 ## Status
 
-Version 0.7 is currently considered a public beta.
+Version 0.8 is currently considered a public beta.
 
 It has been tested with:
 
