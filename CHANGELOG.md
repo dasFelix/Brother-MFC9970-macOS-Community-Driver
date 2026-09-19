@@ -1,6 +1,15 @@
 # Changelog
 
-## 0.7 - Public Beta
+## 0.8.1 - Public Beta
+
+### Fixed
+
+- Improved Installer readability in macOS Dark Mode
+- Added explicit Light/Dark Mode colors to Installer pages
+- Fixed low-contrast text in Welcome and Read Me sections
+- Updated installer and driver metadata to version 0.8.1
+
+## 0.8 - Public Beta
 
 First public-beta release.
 

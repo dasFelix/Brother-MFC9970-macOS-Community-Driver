@@ -1,31 +1,81 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
 <style>
+:root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1d1d1f;
+    --muted-bg: #f5f5f7;
+    --muted-fg: #3a3a3c;
+    --border: #d2d2d7;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #1e1e1e;
+        --fg: #f5f5f7;
+        --muted-bg: #2c2c2e;
+        --muted-fg: #e5e5ea;
+        --border: #48484a;
+    }
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg) !important;
+    color: var(--fg) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 13px;
-    line-height: 1.45;
-    margin: 18px;
+    padding: 22px 28px;
 }
+
 h1 {
-    font-size: 20px;
+    margin: 0 0 14px;
+    color: var(--fg) !important;
+    font-size: 21px;
 }
+
+p, strong {
+    color: var(--fg) !important;
+}
+
 .success {
-    padding: 12px;
-    background: #f2f2f2;
-    border-radius: 7px;
-    margin: 16px 0;
+    box-sizing: border-box;
+    margin: 14px 0 18px;
+    padding: 14px 16px;
+    background-color: var(--muted-bg) !important;
+    color: var(--fg) !important;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.success,
+.success strong {
+    color: var(--fg) !important;
+}
+
+.footer {
+    margin-top: 22px;
+    color: var(--muted-fg) !important;
+    font-size: 12px;
 }
 </style>
 </head>
+
 <body>
 
 <h1>Installation complete</h1>
 
 <div class="success">
-<strong>Brother MFC-9970CDW macOS Community Driver v__VERSION__ has been installed.</strong>
+<strong>Brother MFC-9970CDW macOS Community Driver v__VERSION__ has been installed successfully.</strong>
 </div>
 
 <p>
@@ -46,12 +96,11 @@ Recommended tests include color and grayscale printing, duplex printing,
 </p>
 
 <p>
-Testing and feedback are very welcome. If the driver works on your
-system, successful test reports are useful too — especially when they
-include the macOS version and Mac architecture.
+Testing and feedback are very welcome. Successful test reports are useful
+too, especially when they include the macOS version and Mac architecture.
 </p>
 
-<p>
+<p class="footer">
 Thank you for testing the Brother MFC-9970CDW macOS Community Driver.
 </p>
 

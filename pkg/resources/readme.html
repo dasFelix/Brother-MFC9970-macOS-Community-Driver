@@ -1,119 +1,182 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
 <style>
+:root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1d1d1f;
+    --muted-bg: #f5f5f7;
+    --muted-fg: #3a3a3c;
+    --border: #d2d2d7;
+    --code-bg: #eeeeef;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #1e1e1e;
+        --fg: #f5f5f7;
+        --muted-bg: #2c2c2e;
+        --muted-fg: #e5e5ea;
+        --border: #48484a;
+        --code-bg: #343436;
+    }
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg) !important;
+    color: var(--fg) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 13px;
-    line-height: 1.45;
-    margin: 18px;
+    padding: 22px 28px;
 }
+
+h1, h2 {
+    color: var(--fg) !important;
+}
+
 h1 {
-    font-size: 19px;
+    margin: 0 0 10px;
+    font-size: 20px;
 }
+
 h2 {
-    font-size: 15px;
-    margin-top: 20px;
+    margin: 22px 0 7px;
+    font-size: 16px;
 }
+
+p, li, strong {
+    color: var(--fg) !important;
+}
+
+ul {
+    padding-left: 22px;
+}
+
+li {
+    margin: 3px 0;
+}
+
+.info {
+    box-sizing: border-box;
+    margin: 12px 0;
+    padding: 12px 14px;
+    background-color: var(--muted-bg) !important;
+    color: var(--fg) !important;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.info,
+.info p,
+.info strong {
+    color: var(--fg) !important;
+}
+
 code {
-    font-family: Menlo, monospace;
+    padding: 1px 4px;
+    background-color: var(--code-bg) !important;
+    color: var(--fg) !important;
+    border-radius: 4px;
+    font-family: Menlo, Monaco, monospace;
     font-size: 12px;
 }
 </style>
 </head>
+
 <body>
 
 <h1>About this driver</h1>
 
 <p>
 <strong>Brother MFC-9970CDW macOS Community Driver v__VERSION__</strong>
-is an independent implementation for modern macOS.
+is an independent community implementation for modern macOS.
 </p>
 
-<h2>Supported features</h2>
+<h2>Features</h2>
+
+<ul>
+<li>Automatic Bonjour printer discovery</li>
+<li>Direct PostScript printing over TCP port 9100</li>
+<li>Color and grayscale printing</li>
+<li>600 dpi mode</li>
+<li>Brother Fine / 2400-dpi-class mode</li>
+<li>Long-edge and short-edge duplex</li>
+<li>Cyan, Magenta, Yellow and Black toner levels</li>
+<li>Drum, Belt and Fuser levels</li>
+<li>Automatic printer queue creation</li>
+</ul>
+
+<h2>No legacy Brother driver required</h2>
 
 <p>
-The current driver supports color and grayscale printing, 600 dpi,
-Brother Fine / 2400-dpi-class mode, long-edge duplex, short-edge duplex,
-automatic Bonjour discovery and direct supply-level reporting.
+The package does not include or require Brother's old proprietary
+macOS driver binaries.
 </p>
 
-<p>
-Supply information includes Cyan, Magenta, Yellow and Black toner,
-as well as Drum, Belt and Fuser status.
-</p>
-
-<h2>How it works</h2>
-
-<p>
-Printing is sent directly from macOS to the MFC-9970CDW using the
-printer's PostScript interpreter over TCP port 9100.
-</p>
-
-<p>
-Supply levels are queried directly from the printer using SNMP.
-</p>
-
-<p>
-No Brother proprietary driver binaries are included with this package.
-</p>
+<div class="info">
+The printing path does not require Rosetta and does not require an
+external Linux/CUPS print server.
+</div>
 
 <h2>Automatic discovery</h2>
 
 <p>
-During installation the driver searches the local network for a
-Brother MFC-9970CDW advertised through Bonjour / DNS-SD.
+The installer searches the local network for a Brother MFC-9970CDW
+advertised through Bonjour / DNS-SD.
 </p>
 
 <p>
-If exactly one compatible printer is found, the printer queue is
-configured automatically. The printer does not need a fixed IP address.
+If exactly one compatible printer is found, it is configured automatically.
+A fixed printer IP address is not required.
+</p>
+
+<h2>Supply information</h2>
+
+<p>
+Supply information is queried directly from the printer using SNMP and
+reported to macOS through the CUPS <code>ReportLevels</code> mechanism.
+</p>
+
+<h2>macOS Driver Version 10.4</h2>
+
+<p>
+macOS may separately display <strong>Driver Version 10.4</strong>.
+That number belongs to Apple's generic PostScript printing infrastructure
+and is not the version of this project.
 </p>
 
 <p>
-If multiple MFC-9970CDW printers are discovered, installation currently
-stops rather than choosing a printer arbitrarily.
+The Community Driver version installed by this package is
+<strong>__VERSION__</strong>.
 </p>
 
-<h2>macOS “Driver Version 10.4”</h2>
+<h2>Compatibility</h2>
 
 <p>
-macOS may display <strong>Driver Version 10.4</strong> in Printer
-Information. This refers to Apple's generic PostScript printing
-infrastructure and is not the version of this project.
+macOS 27.x is the currently tested platform.
+macOS 26.x is expected to work, and community testing is welcome.
 </p>
 
-<p>
-The Community-Project Driver version is <strong>__VERSION__</strong>.
-</p>
-
-<h2>Compatibility note</h2>
-
-<p>
-This driver currently uses the traditional PPD-based macOS/CUPS printer
-driver interface. That interface is deprecated and may eventually be
-removed from future versions of macOS or CUPS.
-</p>
+<div class="info">
+The current implementation uses the traditional PPD-based CUPS printer
+driver architecture. This architecture is deprecated, so compatibility
+with future macOS releases cannot be guaranteed.
+</div>
 
 <h2>Testing and feedback</h2>
 
 <p>
-This is a public beta. Testing on different Macs, macOS versions,
-printer firmware versions and network configurations is very welcome.
-</p>
-
-<p>
-Please report successful tests as well as problems through the project's
-issue tracker. Useful reports include the macOS version, Apple Silicon
-or Intel architecture, printer connection type, application used for
-printing, and the feature being tested.
-</p>
-
-<p>
-Please avoid publishing private IP addresses, serial numbers, MAC
-addresses or other device-specific identifiers unless they are actually
-needed to diagnose a problem.
+This is a public beta. Testing reports, bug reports and successful test
+results are all welcome through the project's GitHub issue tracker.
 </p>
 
 </body>
