@@ -70,14 +70,105 @@ Supply reporting:
 
 ## Installation
 
-Download the installer package and open it with the macOS Installer.
+### Recommended: download the prebuilt installer
 
-The installer searches the local network for a Brother MFC-9970CDW and automatically creates the printer queue.
+Most users do **not** need to build the driver themselves.
 
-No printer IP address needs to be entered manually.
+Download the latest `.pkg` installer from the
+**[GitHub Releases page](https://github.com/dasFelix/Brother-MFC9970-macOS-Community-Driver/releases)**.
 
-The printer must be powered on and reachable on the same local network during installation.
+For version 0.8, download:
 
+`Brother-MFC9970-macOS-Community-Driver-0.8.pkg`
+
+Then:
+
+1. Make sure the Brother MFC-9970CDW is powered on.
+2. Make sure the printer and Mac are connected to the same local network.
+3. Open the downloaded `.pkg` file.
+4. Follow the macOS Installer.
+5. The installer automatically searches for the printer using Bonjour.
+6. No printer IP address needs to be entered manually.
+7. After installation, open **System Settings → Printers & Scanners** and verify that the printer appears.
+
+## Build from source
+
+Building from source is only necessary if you want to modify, inspect, or develop the driver yourself.
+
+Clone the repository:
+
+```bash
+git clone https://github.com/dasFelix/Brother-MFC9970-macOS-Community-Driver.git
+cd Brother-MFC9970-macOS-Community-Driver
+```
+
+Build the installer:
+
+```bash
+./build.sh
+```
+
+The build script creates the final macOS installer package:
+
+```text
+Brother-MFC9970-macOS-Community-Driver-0.8.pkg
+```
+
+The build process uses the macOS tools `pkgbuild` and `productbuild` and generates:
+
+- the driver payload
+- the component package
+- the Installer Welcome / Read Me / License / Finished pages
+- the final Distribution package
+
+Generated build files and `.pkg` files are intentionally excluded from Git.
+
+### Verify your own build
+
+Create a SHA-256 checksum:
+
+```bash
+shasum -a 256 Brother-MFC9970-macOS-Community-Driver-0.8.pkg \
+  | awk '{print $1 "  Brother-MFC9970-macOS-Community-Driver-0.8.pkg"}' \
+  > Brother-MFC9970-macOS-Community-Driver-0.8.pkg.sha256
+```
+
+Technical details are documented in:
+
+- [TECHNICAL.md](TECHNICAL.md)
+- [HISTORY.md](HISTORY.md)
+- [CHANGELOG.md](CHANGELOG.md)
+
+
+### macOS security warning
+
+The current public-beta package is not yet Developer ID signed or notarized.
+
+Because of this, macOS may display a security warning when opening the installer.
+
+If macOS blocks the package, open:
+
+**System Settings → Privacy & Security**
+
+and use the option provided by macOS to allow the installer.
+
+### Verify the download
+
+Each GitHub release also includes:
+
+`Brother-MFC9970-macOS-Community-Driver-0.8.pkg.sha256`
+
+To verify the installer:
+
+```bash
+shasum -a 256 -c Brother-MFC9970-macOS-Community-Driver-0.8.pkg.sha256
+```
+
+A successful verification reports:
+
+```text
+Brother-MFC9970-macOS-Community-Driver-0.8.pkg: OK
+```
 
 ## macOS compatibility
 
