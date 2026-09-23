@@ -15,7 +15,7 @@
 *% Changes include printer metadata, print options, supply reporting, and CUPS filter integration.
 
 *FormatVersion: "4.3"
-*FileVersion: "0.8.1"
+*FileVersion: "0.8.2"
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *PCFileName: "generic.ppd"
@@ -23,7 +23,7 @@
 *Manufacturer: "Brother"
 *ModelName: "Brother MFC-9970CDW macOS Community Driver"
 *ShortNickName: "Brother MFC-9970CDW macOS"
-*NickName: "Brother MFC-9970CDW macOS Community Driver v0.8.1"
+*NickName: "Brother MFC-9970CDW macOS Community Driver v0.8.2"
 *PSVersion: "(2016.0) 0"
 *LanguageLevel: "2"
 *ColorDevice: True
